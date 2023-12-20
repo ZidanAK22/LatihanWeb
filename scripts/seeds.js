@@ -11,8 +11,8 @@ async function seedSensors(client) {
         id VARCHAR(6) PRIMARY KEY,
         turbidity INT NOT NULL,
         temperature FLOAT NOT NULL,
-        volume INT NOT NULL,
-        timestamp DATETIME NOT NULL,
+        volume FLOAT NOT NULL,
+        timestamp TIMESTAMPTZ NOT NULL
       );
     `;
 
@@ -22,7 +22,7 @@ async function seedSensors(client) {
     const insertedSensors = await Promise.all(
       sensors.map(async (sensor) => {
         return client.sql`
-        INSERT INTO users (id, turbidity, distance, volume, timestamp)
+        INSERT INTO sensors (id, turbidity, temperature, volume, timestamp)
         VALUES (${sensor.id}, ${sensor.turbidity}, ${sensor.temperature}, ${sensor.volume}, ${sensor.timestamp})
         ON CONFLICT (id) DO NOTHING;
       `;
@@ -33,7 +33,7 @@ async function seedSensors(client) {
 
     return {
       createTable,
-      users: insertedSensors,
+      sensors: insertedSensors,
     };
   } catch (error) {
     console.error('Error seeding users:', error);

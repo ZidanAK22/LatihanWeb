@@ -1,6 +1,15 @@
 import Image from 'next/image';
+import { fetchSensors } from './lib/data';
 
-export default function Home() {
+export default async function Home() {
+  const sensorData = await fetchSensors();
+
+  const formattedSensorData = sensorData.map((data) => {
+    return `${data.id} - Turbidity: ${data.turbidity}, Temperature: ${data.temperature}, Volume: ${data.volume}, Timestamp: ${data.timestamp}`;
+  });
+
+  const allSensorDataString = formattedSensorData.join(', ');
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">      
       
@@ -14,6 +23,12 @@ export default function Home() {
       </div>
       <div className="flex flex-col justify-between">
         <Image src="/monkey.png" alt="profile" width={128} height={128} />
+      </div>
+
+      <div className="flex flex-col justify-between">
+
+        <p>{allSensorDataString}</p>
+
       </div>
     </main>
   )
