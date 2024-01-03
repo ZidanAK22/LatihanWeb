@@ -1,5 +1,5 @@
 // ./app/mqtt/page.tsx
-'use client'
+"use client"
 
 import { useEffect, useState } from 'react';
 import mqtt from 'mqtt';
