@@ -6,10 +6,22 @@ import mqtt from 'mqtt';
 
 const DataPage: React.FC = () => {  
   const [data, setData] = useState<any[]>([]);
-  const mqttClient = mqtt.connect("mqtt://broker.hivemq.com");  
+  const [temperature, setTemperature] = useState(0);
+  const brokerURI = "wss://broker.hivemq.com:8884/mqtt";
+  const username = "leledumbo";
+  const password = "";
+  const clientOptions = {
+    username,
+    password,
+    clientID: `mqttjs_${Math.random().toString(16).substr(2, 8)}`,
+  };
+
+  
 
   useEffect(() => {
     
+    const mqttClient = mqtt.connect(brokerURI, clientOptions);  
+
     mqttClient.on("connect", () => {
       console.log("Connected to MQTT broker");
       mqttClient.subscribe("lele-dumbo-testing")            
@@ -22,6 +34,9 @@ const DataPage: React.FC = () => {
     mqttClient.on("message", (topic, message) => {
       console.log(message);
       const newData = JSON.parse(message.toString());
+
+      setTemperature(parseFloat(newData));
+
       setData((prevData) => [...prevData, newData]);
     });
 
@@ -33,10 +48,12 @@ const DataPage: React.FC = () => {
       mqttClient.end()
     }
 
-  }, [data]);
+  }, []);
 
   return (
-    <div>
+    <div>  
+      <h2>Distance : {temperature} cm</h2>
+      
       <h1>JSON Data from MQTT</h1>
       <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
