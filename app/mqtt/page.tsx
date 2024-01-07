@@ -78,7 +78,11 @@ const DataPage: React.FC = () => {
 
   }, []);
 
-  const degrees = (temperature);
+  
+  const colors: Map<number, string> = new Map([[0, "#00e1ff"], [25, "#00d3ab"], [32, "#bd8a00"], [50, "#b10000"], [75, "#ff0000"]]);
+  const turbidColors: Map<number, string> = new Map([[0, "#00e1ff"], [2.5, "#14c8f9"], [6.25, "#2cbbf4"], [12.5, "#756dad"], [25, "#7a477b"], [50, "#6c2747"] ,[100, "#440808"]]);
+
+  const turbidityProgress = ( turbidity / 40);
 
   return (
     <div>        
@@ -91,8 +95,10 @@ const DataPage: React.FC = () => {
         <Line type="monotone" dataKey="uv" stroke="#ff7300" yAxisId={0} />
         <Line type="monotone" dataKey="pv" stroke="#387908" yAxisId={1} />
         </LineChart> */}                
+
+        
         <div>
-          <ProgressRing percentage={degrees} invertColors={true}/>
+          <ProgressRing percentage={temperature} colors={colors}/>
           <div style={{ textAlign: 'center', marginTop: 10 }}>
             <p>{`${temperature}°C`}</p>
           </div>
@@ -105,9 +111,9 @@ const DataPage: React.FC = () => {
         </div>
         
         <div className="text-center">
-          <ProgressRing percentage={turbidity} />
+          <ProgressRing percentage={turbidityProgress} colors={turbidColors} />
           <br/>
-          <p>Turbidity</p>
+          <p>{turbidity} NTU</p>
         </div>
         
       </div>      
